@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import "katex/dist/katex.min.css";
-import katex from "katex";
 import { evaluate } from "mathjs";
+import { InlineMath } from "react-katex";
 
 export default function Home() {
   const [formula, setFormula] = useState("");
   const [result, setResult] = useState("");
-
   const [activeButton, setActiveButton] = useState(null);
 
   const handleButtonClick = (value: string) => {
@@ -26,19 +25,13 @@ export default function Home() {
     }
   };
 
-  // Render the LaTeX formula to HTML
-  const renderedFormula = katex.renderToString(formula, {
-    throwOnError: false,
-  });
-
   return (
     <div className="max-w-xs mx-auto mt-10">
       <div className="bg-gray-800 text-white p-5 rounded-t-md">
         {/* Display Area for LaTeX Formula */}
-        <div
-          className="text-right text-2xl mb-4"
-          dangerouslySetInnerHTML={{ __html: renderedFormula }}
-        ></div>
+        <div className="text-right text-2xl mb-4">
+          <InlineMath math={formula} />
+        </div>
         {/* Display result */}
         <div className="text-right text-3xl">{result}</div>
       </div>
