@@ -1,110 +1,103 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "katex/dist/katex.min.css";
 import { evaluate } from "mathjs";
 import { InlineMath } from "react-katex";
 import { ComputeEngine } from "@cortex-js/compute-engine";
+import ButtonComponent from "./_compontents/ButtonComponent";
 
 export default function Home() {
-  const [formula, setFormula] = useState("");
-  const [result, setResult] = useState("");
-  const [activeButton, setActiveButton] = useState(null);
-  const [display, setDisplay] = useState<any>("");
+  const [input, setInput] = useState<any>("");
+  const [latex, setLatex] = useState<any>("");
+  const [result, setResult] = useState<any>("");
+  const ce = new ComputeEngine();
 
-  const ce: any = new ComputeEngine();
-
-  const handleButtonClick = (value: string) => {
-    if (value === "=") {
-      try {
-        // Evaluate the formula and set the result
-        const evaluatedResult = evaluate(formula.replace(/x/g, "*"));
-        setResult(evaluatedResult.toString());
-      } catch (error) {
-        // Handle errors (like invalid expressions) here
-        setResult("Error");
+  useEffect(() => {
+    // Function to convert input to LaTeX
+    const convertToLatex = (expression: string | null) => {
+      const parsed = ce.parse(expression);
+      if (parsed) {
+        let output = ce.serialize(parsed, { canonical: false });
+        if (output.includes("error")) {
+          return expression;
+        } else {
+          return output;
+        }
       }
-    } else if (value === "clear") {
-      setFormula("");
+    };
+
+    setLatex(convertToLatex(input));
+  }, [input]);
+
+  const handleChange = (e: { target: { value: any } }) => {
+    setInput(e.target.value);
+  };
+
+  const handleButtonClick = (character: string) => {
+    if (character === "back") {
+      setInput(input.slice(0, -1));
+      return;
+    }
+    if (character === "AC") {
+      setInput("");
       setResult("");
-      setDisplay("");
-    } else if (value === "<") {
-      // Remove the last character from formula and display
-      setFormula((prev) => prev.slice(0, -1));
-      setDisplay((prev: string | any[]) => prev.slice(0, -1));
+      return;
+    }
+    if (character === "=") {
+      calculateResult();
+      return;
     } else {
-      setFormula((prev) => prev + value);
-      setDisplay((prev: string) => prev + value);
+      setInput(input + character);
     }
   };
 
-  const convertToLatex = (expression: string) => {
-    // Parse the expression using Compute Engine
-    const parsed = ce.parse(expression);
-
-    // Convert the parsed expression to a LaTeX string
-    let output = ce.serialize(parsed, "latex");
-    console.log(output);
-
-    // Check if the output contains 'error'
-    if (output.includes("error")) {
-      // Return the original expression if there's an error
-      return expression;
-    } else {
-      // Return the converted LaTeX output if no error
-      return output;
+  const calculateResult = () => {
+    try {
+      setResult(evaluate(input));
+    } catch (error) {
+      setResult("Error in expression");
     }
   };
 
   return (
-    <div className="max-w-xs mx-auto mt-10">
-      <div className="bg-gray-800 text-white p-5 rounded-t-md">
-        {/* Display Area for LaTeX Formula */}
-        <div className="text-right text-2xl mb-4 min-h-[34px]">
-          <InlineMath math={convertToLatex(display)} />
+    <>
+      <div className="max-w-[305px] mx-auto mt-10 bg-[#545454] p-2 rounded-lg">
+        <label className="text-[#3b3b3b] font-bold p-2">CalculadorApp</label>
+        <div className=" text-white p-2 mb-2 mt-1 rounded-md bg-[#222222]">
+          <div className="text-right text-3xl mb-4 h-[43px] min-h-[43px] ">
+            <InlineMath math={latex} />
+          </div>
+          <div className="text-gray-500 text-right h-[32px] min-h-[32px] text-2xl">
+            {result}
+          </div>
         </div>
-        {/* Display result */}
-        <div className="text-right text-3xl min-h-[36px]">{result}</div>
+        <div>
+          <ButtonComponent onButtonClick={handleButtonClick} />
+        </div>
       </div>
-      <div className="bg-gray-700 grid grid-cols-4 gap-2 p-5 rounded-b-md">
-        {/* Number and Operation Buttons */}
-        {[
-          1,
-          2,
-          3,
-          "+",
-          4,
-          5,
-          6,
-          "-",
-          7,
-          8,
-          9,
-          "x",
-          0,
-          "/",
-          "(",
-          ")",
-          "=",
-          "clear",
-          "<",
-        ].map((item: any) => (
-          <button
-            key={item}
-            className={`bg-gray-600 text-white py-2 rounded text-2xl focus:outline-none ${
-              activeButton === item ? "bg-gray-500" : ""
-            }`}
-            onMouseDown={() => {
-              handleButtonClick(item);
-              setActiveButton(item);
-            }}
-            onMouseUp={() => setActiveButton(null)}
-            onMouseLeave={() => setActiveButton(null)}
-          >
-            {item}
-          </button>
-        ))}
-      </div>
-    </div>
+    </>
   );
+}
+
+{
+  /* <button className="button" type="button">
+            <span className="button-inside light-gray">Shift</span>
+          </button> */
+}
+
+{
+  /* <input
+        className="bg-gray-400"
+        type="text"
+        value={input}
+        onChange={handleChange}
+      /> */
+}
+
+{
+  /* <div className="h-[1000px] w-[1000px]">
+        <IntroAnimation></IntroAnimation>
+      </div> */
 }

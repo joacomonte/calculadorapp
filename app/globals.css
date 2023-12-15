@@ -8,20 +8,126 @@
   --background-end-rgb: 255, 255, 255;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
-}
+} */
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: white;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Technotype34';
+  src: url('https://assets.codepen.io/4175254/Technotype34-Regular.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@function em($pixels) {
+  @if not (unit($pixels) == 'px') {
+    @error 'Value #{$pixels} must have `px` unit.';
+  }
+  
+  @return $pixels / 16px * 1em;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+  min-height: 100vh;
+  font-family: 'Technotype34', sans-serif;
+  background-color: #bbb;
+  background-image: url('https://assets.codepen.io/4175254/ep-133-noise.png');
+  background-size: 80px 80px;
+}
+
+@font-face {
+  font-display: swap;
+  font-family: 'Technotype34';
+  src: url('https://assets.codepen.io/4175254/Technotype34-Regular.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+  min-height: 100vh;
+  font-family: 'Technotype34', sans-serif;
+  background-color: #bbb;
+  background-image: url('https://assets.codepen.io/4175254/ep-133-noise.png');
+  background-size: 80px 80px;
+}
+
+
+.sideButton{
+  width: 3em !important;
+}
+
+.button {
+  border: 0.125em solid transparent;
+  border-radius: 0.125em;
+
+
+  width: 5em;
+}
+
+.button:active .button-inside {
+  transform: scale(0.98);
+  filter: brightness(90%);
+  box-shadow: inset 0 0 0.25em #000, inset 0.0625em 0.0625em 0.0625em transparent, inset -0.0625em -0.0625em 0.0625em transparent, 0.125em 0.125em 0.25em transparent;
+}
+
+.button-inside {
+  display: inline-block;
+  position: relative;
+  border-radius: 0.5625em;
+  padding: 0.625em 0.75em 0.4375em;
+  width: 100%;
+  background-color: #676767; /* This is the default --background-color variable */
+  background-image: url('https://assets.codepen.io/4175254/ep-133-noise.png');
+  background-size: 80px 80px;
+  box-shadow: inset 0.0625em 0.0625em 0.0625em #ffffff75, inset -0.0625em -0.0625em 0.0625em #202020, 0.125em 0.125em 0.25em #00000057;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff; /* This is the default --text-color variable */
+  transition-property: transform, background-color, box-shadow;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.25, 0.5, 0.5, 1);
+}
+
+.button-inside.dark-gray {
+  background-color: #353535;
+  color: #fff; /* Adjust if needed */
+}
+
+.button-inside.white {
+  background-color: #cfcbca;
+  color: #010101;
+}
+
+.button-inside.light-gray {
+  background-color: #bcbcbc;
+  color: #fff; /* Adjust if needed */
+}
+
+.button-inside.gray {
+  background-color: #676767;
+  color: #fff; /* Adjust if needed */
+}
+
+.button-inside.orange {
+  background-color: #f05a22;
+  color: #fff; /* Adjust if needed */
 }
